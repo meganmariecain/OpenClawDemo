@@ -76,6 +76,13 @@ func main() {
 	ensureConfigured()
 	go startGateway()
 	go pollGatewayHealth()
+	target, _ := url.Parse("http://127.0.0.1:" + gatewayPort)
+reverseProxy = httputil.NewSingleHostReverseProxy(target)
+reverseProxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
+    log.Printf("Proxy error: %v", err)
+    w.WriteHeader(http.StatusBadGateway)
+    w.Write([]byte(`{"error":"gateway unavailable"}`))
+}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/health", handleHealth)

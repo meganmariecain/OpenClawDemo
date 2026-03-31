@@ -45,6 +45,7 @@ var (
 	// Rate limiting for auth attempts
 	authAttempts   = make(map[string][]time.Time)
 	authAttemptsMu sync.Mutex
+	reverseProxy *httputil.ReverseProxy
 )
 
 func envOr(key, fallback string) string {

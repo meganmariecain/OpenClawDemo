@@ -670,14 +670,7 @@ func handleProxy(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// HTTP reverse proxy
-	target, _ := url.Parse("http://127.0.0.1:" + gatewayPort)
-	proxy := httputil.NewSingleHostReverseProxy(target)
-	proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
-		log.Printf("Proxy error: %v", err)
-		w.WriteHeader(http.StatusBadGateway)
-		w.Write([]byte(`{"error":"gateway unavailable"}`))
-	}
-	proxy.ServeHTTP(w, r)
+	reverseProxy.ServeHTTP(w, r)
 }
 
 func proxyWebSocket(w http.ResponseWriter, r *http.Request) {

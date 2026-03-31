@@ -324,8 +324,11 @@ func isRateLimited(ip string) bool {
 		}
 	}
 	authAttempts[ip] = recent
+if len(recent) == 0 {
+    delete(authAttempts, ip)
+}
 
-	return len(recent) >= rateLimitMaxTries
+return len(recent) >= rateLimitMaxTries
 }
 
 func recordAuthAttempt(ip string) {
